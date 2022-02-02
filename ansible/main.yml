@@ -1,0 +1,19 @@
+---
+- hosts: app
+  gather_facts: yes
+  become: yes
+  vars:
+  users:
+    alice:
+      name: Alice Appleworth
+      telephone: 945-223-7890
+    bob:
+      name: Bob Bananarama
+      telephone: 987-654-3210
+    сarol:
+      name: Carol Jenkins
+      telephone: 345-334-7833
+  tasks:
+    - name: USERS | Add users with password, home folders
+      include_role:
+        name: add_users
