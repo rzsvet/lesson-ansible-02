@@ -2,18 +2,14 @@
 - hosts: app
   gather_facts: yes
   become: yes
-  vars:
-  users:
-    alice:
-      name: Alice Appleworth
-      telephone: 945-223-7890
-    bob:
-      name: Bob Bananarama
-      telephone: 987-654-3210
-    сarol:
-      name: Carol Jenkins
-      telephone: 345-334-7833
-  tasks:
+  tasks:   
     - name: USERS | Add users with password, home folders
-      include_role:
-        name: add_users
+      ansible.builtin.user:
+        name: "{{ item.key }}"
+        comment: "{{ item.value.email }} | {{ item.value.name }} | {{ item.value.telephone }}"
+        password: "{{ item.value.password | password_hash('sha512') }}"
+        update_password: on_create
+        shell: /bin/bash
+        home: "/home/{{ item.key }}"
+        append: yes
+      loop: "{{ lookup('dict', users) }}"
